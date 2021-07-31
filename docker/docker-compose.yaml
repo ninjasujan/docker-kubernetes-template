@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo"
+    volumes:
+      - data:/data/db #name-volume need to add volume key in top level
+    environment:
+    #   MONGO_ROOT_USER_NAME: some_name
+    #   MONGO_ROOT_USER_NAME: some_key
+    env_file:
+      - ./env/mongo.env
+
+    backend:
+      build:
+      context: ./
+      dockerfile: Dockerfile
+      ports:
+        - "80:80"
+      volumes:
+        - logs:/app/logs
+        - ./backend:/app #bind mount - no entry needed fo rtop level volume key
+        - /app/node_modules
+      stdin_open: true
+      tty: true
+      depends_on:
+        - mongodb
+volumes:
+  data:
+  logs:
